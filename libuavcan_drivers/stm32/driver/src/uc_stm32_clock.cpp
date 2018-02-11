@@ -98,7 +98,7 @@ uavcan::uint64_t time_utc = 0;
 
 static void nvicEnableVector(IRQn_Type irq,  uint8_t prio)
 {
-    #if !defined (USE_HAL_DRIVER)
+    #if 0//!defined (USE_HAL_DRIVER)
       NVIC_InitTypeDef NVIC_InitStructure;
       NVIC_InitStructure.NVIC_IRQChannel = irq;
       NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = prio;

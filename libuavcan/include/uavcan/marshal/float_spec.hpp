@@ -50,9 +50,12 @@ class UAVCAN_EXPORT IEEE754Converter
          * Some compilers may have is_iec559 to be defined false despite the fact that IEEE754 is supported.
          * An acceptable workaround would be to put an #ifdef here.
          */
-#if UAVCAN_CPP_VERSION >= UAVCAN_CPP11
-        StaticAssert<std::numeric_limits<typename NativeFloatSelector<BitLen>::Type>::is_iec559>::check();
+#if !defined ( __ICCARM__ ) /*!< IAR Compiler supports IEEE754 yet has is_iec559 defined false */
+  #if UAVCAN_CPP_VERSION >= UAVCAN_CPP11
+              StaticAssert<std::numeric_limits<typename NativeFloatSelector<BitLen>::Type>::is_iec559>::check();
+  #endif
 #endif
+
     }
 
 public:
@@ -142,7 +145,11 @@ public:
 #if UAVCAN_CPP_VERSION < UAVCAN_CPP11
     enum { IsExactRepresentation = (sizeof(StorageType) * 8 == BitLen) };
 #else
-    enum { IsExactRepresentation = (sizeof(StorageType) * 8 == BitLen) && std::numeric_limits<StorageType>::is_iec559 };
+    #if defined ( __ICCARM__ ) /*!< IAR Compiler supports IEEE754 yet has is_iec559 defined false */
+        enum { IsExactRepresentation = (sizeof(StorageType) * 8 == BitLen) };
+    #else
+		enum { IsExactRepresentation = (sizeof(StorageType) * 8 == BitLen) && std::numeric_limits<StorageType>::is_iec559 };
+    #endif
 #endif
 
     using IEEE754Limits<BitLen>::max;

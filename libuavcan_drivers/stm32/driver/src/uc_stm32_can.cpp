@@ -17,6 +17,7 @@
 #elif UAVCAN_STM32_BAREMETAL
 #include <chip.h>	// See http://uavcan.org/Implementations/Libuavcan/Platforms/STM32/
 #elif UAVCAN_STM32_FREERTOS
+#include <chip.h>	
 #else
 # error "Unknown OS"
 #endif
@@ -957,7 +958,7 @@ uavcan::int16_t CanDriver::select(uavcan::CanSelectMasks& inout_masks,
 
 static void nvicEnableVector(IRQn_Type irq,  uint8_t prio)
 {
-    #if !defined (USE_HAL_DRIVER)
+    #if 0//!defined (USE_HAL_DRIVER)
       NVIC_InitTypeDef NVIC_InitStructure;
       NVIC_InitStructure.NVIC_IRQChannel = irq;
       NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = prio;
